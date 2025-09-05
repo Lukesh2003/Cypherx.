@@ -53,6 +53,8 @@ import {
   SelectValue,
 } from "./ui/select";
 import { translateText } from "@/ai/flows/translate-alerts-and-ui";
+import { ClientOnly } from "./client-only";
+
 
 interface DashboardClientProps {
   initialAlerts: Alert[];
@@ -344,7 +346,9 @@ export default function DashboardClient({
                           {tourist.lastSeen}
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          {new Date(tourist.dateAdded).toLocaleDateString()}
+                          <ClientOnly>
+                            {new Date(tourist.dateAdded).toLocaleDateString()}
+                          </ClientOnly>
                         </TableCell>
                         <TableCell>
                           <DropdownMenu>
@@ -408,7 +412,10 @@ export default function DashboardClient({
                       {alert.description}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {new Date(alert.timestamp).toLocaleString()} at {alert.location}
+                      <ClientOnly>
+                        {new Date(alert.timestamp).toLocaleString()}
+                      </ClientOnly>{" "}
+                      at {alert.location}
                     </p>
                   </div>
                   <div className="flex flex-col items-end gap-2">
