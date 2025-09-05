@@ -262,9 +262,11 @@ export default function DashboardClient({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="es">Español</SelectItem>
-                  <SelectItem value="fr">Français</SelectItem>
-                  <SelectItem value="de">Deutsch</SelectItem>
+                  <SelectItem value="ta">Tamil</SelectItem>
+                  <SelectItem value="hi">Hindi</SelectItem>
+                  <SelectItem value="ml">Malayalam</SelectItem>
+                  <SelectItem value="te">Telugu</SelectItem>
+                  <SelectItem value="kn">Kannada</SelectItem>
                 </SelectContent>
               </Select>
             </CardContent>
