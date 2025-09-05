@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, createContext, useContext, useMemo } from "react";
 import Image from "next/image";
 import {
   Bell,
@@ -52,67 +52,135 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { translateText } from "@/ai/flows/translate-alerts-and-ui";
+import { translateTexts } from "@/ai/flows/translate-alerts-and-ui";
 import { ClientOnly } from "./client-only";
-
 
 interface DashboardClientProps {
   initialAlerts: Alert[];
   initialTourists: Tourist[];
 }
 
-// A simple component to demonstrate translation
-function TranslatedText({
-  children,
-  lang,
-}: {
-  children: string;
-  lang: string;
-}) {
-  const [translated, setTranslated] = useState(children);
+const TranslationContext = createContext({
+  language: 'en',
+  getTranslation: (text: string) => text,
+});
 
-  React.useEffect(() => {
-    if (lang === "en" || !children) {
-      setTranslated(children);
-      return;
-    }
+const useTranslation = () => useContext(TranslationContext);
 
-    let isCancelled = false;
-    async function doTranslate() {
-      try {
-        const result = await translateText({ text: children, language: lang });
-        if (!isCancelled) {
-          setTranslated(result.translatedText);
+function TranslatedText({ children }: { children: string }) {
+  const { getTranslation } = useTranslation();
+  return <>{getTranslation(children)}</>;
+}
+
+function TranslationProvider({ children }: { children: React.ReactNode }) {
+    const { toast } = useToast();
+    const [language, setLanguage] = useState('en');
+    const [translations, setTranslations] = useState<Record<string, string>>({});
+    const [translationKeys, setTranslationKeys] = useState<Set<string>>(new Set());
+
+    const registerTranslation = (text: string) => {
+        if (!translationKeys.has(text)) {
+            setTranslationKeys(prev => new Set(prev).add(text));
         }
-      } catch (e) {
-        console.error("Translation failed", e);
-        if (!isCancelled) {
-          setTranslated(children); // Fallback to original text
-        }
-      }
-    }
-
-    doTranslate();
-
-    return () => {
-      isCancelled = true;
     };
-  }, [children, lang]);
+    
+    React.useEffect(() => {
+        let isCancelled = false;
 
-  return <>{translated}</>;
+        async function doTranslate() {
+            if (language === 'en') {
+                setTranslations({});
+                return;
+            }
+
+            if (translationKeys.size === 0) {
+                return;
+            }
+
+            const textsToTranslate = Array.from(translationKeys);
+
+            try {
+                const result = await translateTexts({ texts: textsToTranslate, language });
+                if (!isCancelled) {
+                    const newTranslations: Record<string, string> = {};
+                    textsToTranslate.forEach((text, index) => {
+                        newTranslations[text] = result.translatedTexts[index];
+                    });
+                    setTranslations(newTranslations);
+                }
+            } catch (e) {
+                console.error("Translation failed", e);
+                toast({
+                    title: 'Translation Error',
+                    description: 'Could not translate the UI.',
+                    variant: 'destructive',
+                });
+                if (!isCancelled) {
+                    setTranslations({}); // Clear translations on error
+                }
+            }
+        }
+
+        doTranslate();
+
+        return () => {
+            isCancelled = true;
+        };
+    }, [language, translationKeys, toast]);
+
+
+    const getTranslation = (text: string) => {
+        if (!text) return '';
+        registerTranslation(text);
+        if (language === 'en') return text;
+        return translations[text] || text;
+    };
+
+    const value = useMemo(() => ({
+        language,
+        setLanguage,
+        getTranslation,
+    }), [language, translations]);
+
+
+    return (
+        <TranslationContext.Provider value={{ language, getTranslation }}>
+            {React.Children.map(children, child => {
+                if (React.isValidElement(child)) {
+                    return React.cloneElement(child as React.ReactElement, { setLanguage });
+                }
+                return child;
+            })}
+        </TranslationContext.Provider>
+    );
 }
 
 export default function DashboardClient({
   initialAlerts,
   initialTourists,
 }: DashboardClientProps) {
+  return (
+    <TranslationProvider>
+      <DashboardContent
+        initialAlerts={initialAlerts}
+        initialTourists={initialTourists}
+      />
+    </TranslationProvider>
+  )
+}
+
+function DashboardContent({
+  initialAlerts,
+  initialTourists,
+  setLanguage,
+}: DashboardClientProps & { setLanguage?: (lang: string) => void }) {
   const { toast } = useToast();
   const [alerts, setAlerts] = useState<Alert[]>(initialAlerts);
   const [tourists, setTourists] = useState<Tourist[]>(initialTourists);
   const [isSimulating, setIsSimulating] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const [isFirDialogOpen, setIsFirDialogOpen] = useState(false);
-  const [language, setLanguage] = useState("en");
+  const { language } = useTranslation();
 
   const activeAlertsCount = alerts.filter((a) => a.status === "Active").length;
 
@@ -211,7 +279,7 @@ export default function DashboardClient({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                <TranslatedText lang={language}>Total Tourists</TranslatedText>
+                <TranslatedText>Total Tourists</TranslatedText>
               </CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -225,7 +293,7 @@ export default function DashboardClient({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                <TranslatedText lang={language}>Active Alerts</TranslatedText>
+                <TranslatedText>Active Alerts</TranslatedText>
               </CardTitle>
               <Siren className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -239,7 +307,7 @@ export default function DashboardClient({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                <TranslatedText lang={language}>Resolved Incidents</TranslatedText>
+                <TranslatedText>Resolved Incidents</TranslatedText>
               </CardTitle>
               <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -253,7 +321,7 @@ export default function DashboardClient({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                <TranslatedText lang={language}>System Language</TranslatedText>
+                <TranslatedText>System Language</TranslatedText>
               </CardTitle>
               <Languages className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -278,7 +346,7 @@ export default function DashboardClient({
           <div className="grid auto-rows-max items-start gap-4 lg:gap-8 xl:col-span-2">
             <Card className="xl:col-span-2">
               <CardHeader className="pb-3">
-                <CardTitle><TranslatedText lang={language}>Real-Time Locations</TranslatedText></CardTitle>
+                <CardTitle><TranslatedText>Real-Time Locations</TranslatedText></CardTitle>
                 <CardDescription>
                   Live map of all registered tourists.
                 </CardDescription>
@@ -295,7 +363,7 @@ export default function DashboardClient({
 
             <Card>
               <CardHeader>
-                <CardTitle><TranslatedText lang={language}>Recent Tourists</TranslatedText></CardTitle>
+                <CardTitle><TranslatedText>Recent Tourists</TranslatedText></CardTitle>
               </CardHeader>
               <CardContent>
                 <Table>
@@ -339,7 +407,7 @@ export default function DashboardClient({
                                 : "destructive"
                             }
                           >
-                            <TranslatedText lang={language}>{tourist.status}</TranslatedText>
+                            <TranslatedText>{tourist.status}</TranslatedText>
                           </Badge>
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
@@ -379,7 +447,7 @@ export default function DashboardClient({
           <Card>
             <CardHeader className="flex flex-row items-center gap-4">
               <div className="grid gap-2">
-                <CardTitle><TranslatedText lang={language}>Alerts & Incidents</TranslatedText></CardTitle>
+                <CardTitle><TranslatedText>Alerts & Incidents</TranslatedText></CardTitle>
                 <CardDescription>
                   Live feed of SOS and AI-detected anomalies.
                 </CardDescription>
@@ -424,7 +492,7 @@ export default function DashboardClient({
                         alert.status === "Active" ? "destructive" : "secondary"
                       }
                     >
-                      <TranslatedText lang={language}>{alert.status}</TranslatedText>
+                      <TranslatedText>{alert.status}</TranslatedText>
                     </Badge>
                     {alert.status === "Active" && (
                       <Button

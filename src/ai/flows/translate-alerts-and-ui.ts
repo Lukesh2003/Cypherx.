@@ -12,17 +12,17 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const TranslateTextInputSchema = z.object({
-  text: z.string().describe('The text to translate.'),
+  texts: z.array(z.string()).describe('The text content to translate.'),
   language: z.string().describe('The target language for translation (e.g., es for Spanish).'),
 });
 export type TranslateTextInput = z.infer<typeof TranslateTextInputSchema>;
 
 const TranslateTextOutputSchema = z.object({
-  translatedText: z.string().describe('The translated text.'),
+  translatedTexts: z.array(z.string()).describe('The translated text.'),
 });
 export type TranslateTextOutput = z.infer<typeof TranslateTextOutputSchema>;
 
-export async function translateText(input: TranslateTextInput): Promise<TranslateTextOutput> {
+export async function translateTexts(input: TranslateTextInput): Promise<TranslateTextOutput> {
   return translateTextFlow(input);
 }
 
@@ -30,9 +30,12 @@ const translateTextPrompt = ai.definePrompt({
   name: 'translateTextPrompt',
   input: {schema: TranslateTextInputSchema},
   output: {schema: TranslateTextOutputSchema},
-  prompt: `Translate the following text to {{language}}:
+  prompt: `Translate the following text content to {{language}}. Maintain the original JSON array structure in your response.
 
-{{{text}}}`,
+{{#each texts}}
+- {{{this}}}
+{{/each}}
+`,
 });
 
 const translateTextFlow = ai.defineFlow(
