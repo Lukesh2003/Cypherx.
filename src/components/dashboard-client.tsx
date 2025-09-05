@@ -302,6 +302,8 @@ function DashboardContent({
   const totalTourists = tourists.length;
   const resolvedIncidents = alerts.filter(a => a.status === 'Resolved').length;
 
+  const memoizedMap = useMemo(() => <LiveMap tourists={tourists} />, [tourists]);
+
   return (
     <div
       className="flex flex-1 items-start justify-center rounded-lg border border-dashed shadow-sm"
@@ -385,7 +387,9 @@ function DashboardContent({
                 </CardDescription>
               </CardHeader>
               <CardContent className="h-[400px] w-full">
-                <LiveMap tourists={tourists} />
+                <ClientOnly>
+                  {memoizedMap}
+                </ClientOnly>
               </CardContent>
             </Card>
 
@@ -550,5 +554,3 @@ function DashboardContent({
     </div>
   );
 }
-
-    

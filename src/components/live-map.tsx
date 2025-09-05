@@ -51,5 +51,3 @@ export function LiveMap({ tourists }: { tourists: Tourist[] }) {
         </MapContainer>
     )
 }
-
-    
