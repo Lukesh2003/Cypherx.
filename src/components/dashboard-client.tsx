@@ -181,12 +181,13 @@ export default function DashboardClient() {
 
   useEffect(() => {
     (async () => {
-      // Import leaflet.css and leaflet library dynamically only on the client side
+      // Import leaflet.css dynamically only on the client side
       await import('leaflet/dist/leaflet.css');
       const L = (await import('leaflet')).default;
 
-      // Fix for default icon issue with Leaflet
-      delete (L.Icon.Default.prototype as any)._getIconUrl;
+      // Fix for default icon issue with Leaflet in some module bundlers
+      // @ts-ignore
+      delete L.Icon.Default.prototype._getIconUrl;
       L.Icon.Default.mergeOptions({
         iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
         iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -395,10 +396,8 @@ function DashboardContent({
                   Live map of all registered tourists.
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                 <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
-                    <LiveMap tourists={tourists} />
-                </div>
+              <CardContent className="h-[400px] w-full">
+                <LiveMap tourists={tourists} />
               </CardContent>
             </Card>
 
@@ -563,3 +562,5 @@ function DashboardContent({
     </div>
   );
 }
+
+    
