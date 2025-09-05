@@ -1,20 +1,12 @@
 import Link from 'next/link';
 import {
-  Bell,
-  CheckCircle2,
   FileText,
-  Home,
   LayoutDashboard,
-  LineChart,
-  Package,
   Settings,
-  Siren,
-  ShoppingCart,
   UserPlus,
   Users,
 } from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -31,8 +23,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Logo } from '@/components/icons';
 import {
   Table,
   TableBody,
@@ -41,11 +33,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Logo } from '@/components/icons';
 import { MOCK_ALERTS, MOCK_TOURISTS } from '@/lib/data';
-import DashboardClient from '@/components/dashboard-client';
+import { Badge } from '@/components/ui/badge';
+import { ClientOnly } from '@/components/client-only';
 
-export default function Dashboard() {
+export default function ReportsPage() {
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
@@ -60,7 +52,7 @@ export default function Dashboard() {
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
               <Link
                 href="/"
-                className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
                 <LayoutDashboard className="h-4 w-4" />
                 Dashboard
@@ -74,7 +66,7 @@ export default function Dashboard() {
               </Link>
               <Link
                 href="/reports"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
               >
                 <FileText className="h-4 w-4" />
                 Reports
@@ -129,7 +121,7 @@ export default function Dashboard() {
                 </Link>
                 <Link
                   href="/"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
+                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                 >
                   <LayoutDashboard className="h-5 w-5" />
                   Dashboard
@@ -143,7 +135,7 @@ export default function Dashboard() {
                 </Link>
                 <Link
                   href="/reports"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
                 >
                   <FileText className="h-5 w-5" />
                   Reports
@@ -195,9 +187,50 @@ export default function Dashboard() {
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           <div className="flex items-center">
-            <h1 className="text-lg font-semibold md:text-2xl">Dashboard</h1>
+            <h1 className="text-lg font-semibold md:text-2xl">Incident Reports</h1>
           </div>
-          <DashboardClient initialAlerts={MOCK_ALERTS} initialTourists={MOCK_TOURISTS} />
+          <Card>
+            <CardHeader>
+              <CardTitle>All Incidents</CardTitle>
+              <CardDescription>A list of all alerts and incidents.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Tourist</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {MOCK_ALERTS.map((alert) => (
+                    <TableRow key={alert.id}>
+                      <TableCell>{MOCK_TOURISTS.find(t => t.id === alert.touristId)?.name}</TableCell>
+                      <TableCell>{alert.description}</TableCell>
+                      <TableCell>{alert.location}</TableCell>
+                      <TableCell>
+                        <Badge variant={alert.status === 'Active' ? 'destructive' : 'secondary'}>
+                          {alert.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <ClientOnly>
+                          {new Date(alert.timestamp).toLocaleString()}
+                        </ClientOnly>
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="outline" size="sm">View</Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </main>
       </div>
     </div>
