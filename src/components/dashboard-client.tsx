@@ -51,6 +51,7 @@ import {
 } from "./ui/select";
 import { translateTexts } from "@/ai/flows/translate-alerts-and-ui";
 import { TooltipProvider } from "./ui/tooltip";
+import { ClientOnly } from "./client-only";
 
 // Dynamically import the LiveMap component with SSR disabled
 const LiveMap = dynamic(() => import('./live-map').then(mod => mod.LiveMap), {
@@ -161,17 +162,6 @@ function TranslationProvider({ children, initialAlerts, initialTourists }: { chi
             </TooltipProvider>
         </TranslationContext.Provider>
     );
-}
-
-function ClientOnly({ children }: { children: React.ReactNode }) {
-    const [hasMounted, setHasMounted] = useState(false);
-    useEffect(() => {
-        setHasMounted(true);
-    }, []);
-    if (!hasMounted) {
-        return null;
-    }
-    return <>{children}</>;
 }
 
 
@@ -397,7 +387,9 @@ function DashboardContent({
                 </CardDescription>
               </CardHeader>
               <CardContent className="h-[400px] w-full">
-                <LiveMap tourists={tourists} />
+                <ClientOnly>
+                  <LiveMap tourists={tourists} />
+                </ClientOnly>
               </CardContent>
             </Card>
 
@@ -562,5 +554,3 @@ function DashboardContent({
     </div>
   );
 }
-
-    
