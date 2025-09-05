@@ -55,6 +55,7 @@ import {
 } from "./ui/select";
 import { translateTexts } from "@/ai/flows/translate-alerts-and-ui";
 import { ClientOnly } from "./client-only";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 
 const TranslationContext = createContext({
   language: 'en',
@@ -96,6 +97,7 @@ function TranslationProvider({ children, initialAlerts, initialTourists }: { chi
             textsToTranslate.add("Alerts & Incidents");
             initialTourists.forEach(t => textsToTranslate.add(t.status));
             initialAlerts.forEach(a => textsToTranslate.add(a.status));
+            initialAlerts.forEach(a => textsToTranslate.add(a.type));
 
             const textsArray = Array.from(textsToTranslate);
 
@@ -148,7 +150,9 @@ function TranslationProvider({ children, initialAlerts, initialTourists }: { chi
 
     return (
         <TranslationContext.Provider value={value}>
-            {children}
+            <TooltipProvider>
+              {children}
+            </TooltipProvider>
         </TranslationContext.Provider>
     );
 }
@@ -186,7 +190,7 @@ function DashboardContent({
   const [isSimulating, setIsSimulating] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const [isFirDialogOpen, setIsFirDialogOpen] = useState(false);
-  const { language, setLanguage } = useTranslation();
+  const { language, setLanguage, getTranslation } = useTranslation();
 
   const activeAlertsCount = alerts.filter((a) => a.status === "Active").length;
 
@@ -275,6 +279,19 @@ function DashboardContent({
   const totalTourists = tourists.length;
   const resolvedIncidents = alerts.filter(a => a.status === 'Resolved').length;
 
+  const getPositionForLocation = (lat: number, lng: number) => {
+    // These are bounds for a map of India.
+    const bounds = {
+      top: 37.0,
+      bottom: 8.0,
+      left: 68.0,
+      right: 97.5,
+    };
+    const x = ((lng - bounds.left) / (bounds.right - bounds.left)) * 100;
+    const y = ((bounds.top - lat) / (bounds.top - bounds.bottom)) * 100;
+    return { x: `${x}%`, y: `${y}%` };
+  };
+
   return (
     <div
       className="flex flex-1 items-start justify-center rounded-lg border border-dashed shadow-sm"
@@ -359,10 +376,29 @@ function DashboardContent({
               </CardHeader>
               <CardContent>
                  <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
-                    <Image src="https://picsum.photos/1200/600" data-ai-hint="map satellite" alt="Map of tourist locations" fill objectFit="cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end justify-center p-4">
-                        <p className="text-white/80 text-sm bg-black/50 px-3 py-1 rounded-full">Map placeholder: Real-time tracking would be shown here.</p>
-                    </div>
+                    <Image src="https://picsum.photos/1200/600?grayscale" data-ai-hint="map satellite" alt="Map of tourist locations" fill objectFit="cover" />
+                    {tourists.map((tourist) => {
+                      const { x, y } = getPositionForLocation(tourist.location.lat, tourist.location.lng);
+                      return (
+                        <Tooltip key={tourist.id}>
+                          <TooltipTrigger asChild>
+                            <div
+                              className="absolute -translate-x-1/2 -translate-y-1/2"
+                              style={{ left: x, top: y }}
+                            >
+                              <Avatar className={`h-8 w-8 border-2 ${tourist.status === 'Alert' ? 'border-red-500' : 'border-green-500'}`}>
+                                <AvatarImage src={tourist.avatar} alt={tourist.name} />
+                                <AvatarFallback>{tourist.name.charAt(0)}</AvatarFallback>
+                              </Avatar>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{tourist.name}</p>
+                            <p className="text-xs text-muted-foreground">{tourist.lastSeen}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      );
+                    })}
                 </div>
               </CardContent>
             </Card>
@@ -479,7 +515,7 @@ function DashboardContent({
                   </Avatar>
                   <div className="grid gap-1 flex-1">
                     <p className="text-sm font-medium leading-none">
-                      {alert.type === "SOS" ? "SOS Signal" : "AI Anomaly"} from{" "}
+                      {getTranslation(alert.type) === 'SOS' ? "SOS Signal" : "AI Anomaly"} from{" "}
                       {getTouristById(alert.touristId)?.name}
                     </p>
                     <p className="text-sm text-muted-foreground">
@@ -528,3 +564,5 @@ function DashboardContent({
     </div>
   );
 }
+
+    
