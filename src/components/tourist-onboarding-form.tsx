@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { BookUser, Plane, Phone, User, UserPlus } from "lucide-react";
+import { MOCK_TOURISTS, Tourist } from "@/lib/data";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -44,13 +45,29 @@ export function TouristOnboardingForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    const newTourist: Tourist = {
+        id: `t${Date.now()}`,
+        name: values.name,
+        passport: values.passport,
+        itinerary: values.itinerary,
+        emergencyContact: {
+            name: values.emergencyContactName,
+            phone: values.emergencyContactPhone,
+        },
+        status: 'Safe',
+        lastSeen: 'Just now',
+        location: { lat: 0, lng: 0 }, // Default location, should be updated by tracking
+        dateAdded: new Date().toISOString(),
+        avatar: `https://i.pravatar.cc/150?u=${Date.now()}`
+    };
+
+    MOCK_TOURISTS.unshift(newTourist);
+    
     toast({
       title: "Registration Successful",
       description: `${values.name} has been registered with Cypherx Shield.`,
     });
-    // Here you would typically send the data to your backend
-    // For now, we'll just redirect to the dashboard
+    
     router.push("/");
   }
 

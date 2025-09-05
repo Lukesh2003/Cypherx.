@@ -72,7 +72,7 @@ export default function ReportsPage() {
                 Reports
               </Link>
               <Link
-                href="#"
+                href="/settings"
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
                 <Settings className="h-4 w-4" />
@@ -141,7 +141,7 @@ export default function ReportsPage() {
                   Reports
                 </Link>
                 <Link
-                  href="#"
+                  href="/settings"
                   className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                 >
                   <Settings className="h-5 w-5" />
@@ -223,7 +223,9 @@ export default function ReportsPage() {
                         </ClientOnly>
                       </TableCell>
                       <TableCell>
-                        <Button variant="outline" size="sm">View</Button>
+                        <Button asChild variant="outline" size="sm">
+                          <Link href={`/reports/${alert.id}`}>View</Link>
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

@@ -41,7 +41,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { Alert, Tourist } from "@/lib/data";
+import { Alert, Tourist, MOCK_ALERTS, MOCK_TOURISTS } from "@/lib/data";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { detectAnomalousActivity } from "@/ai/flows/detect-anomalous-activity";
 import { useToast } from "@/hooks/use-toast";
@@ -55,11 +55,6 @@ import {
 } from "./ui/select";
 import { translateTexts } from "@/ai/flows/translate-alerts-and-ui";
 import { ClientOnly } from "./client-only";
-
-interface DashboardClientProps {
-  initialAlerts: Alert[];
-  initialTourists: Tourist[];
-}
 
 const TranslationContext = createContext({
   language: 'en',
@@ -158,27 +153,36 @@ function TranslationProvider({ children, initialAlerts, initialTourists }: { chi
     );
 }
 
-export default function DashboardClient({
-  initialAlerts,
-  initialTourists,
-}: DashboardClientProps) {
+export default function DashboardClient() {
+  const [alerts, setAlerts] = useState<Alert[]>(MOCK_ALERTS);
+  const [tourists, setTourists] = useState<Tourist[]>(MOCK_TOURISTS);
+
   return (
-    <TranslationProvider initialAlerts={initialAlerts} initialTourists={initialTourists}>
+    <TranslationProvider initialAlerts={alerts} initialTourists={tourists}>
       <DashboardContent
-        initialAlerts={initialAlerts}
-        initialTourists={initialTourists}
+        alerts={alerts}
+        setAlerts={setAlerts}
+        tourists={tourists}
+        setTourists={setTourists}
       />
     </TranslationProvider>
   )
 }
 
+interface DashboardContentProps {
+    alerts: Alert[];
+    setAlerts: React.Dispatch<React.SetStateAction<Alert[]>>;
+    tourists: Tourist[];
+    setTourists: React.Dispatch<React.SetStateAction<Tourist[]>>;
+}
+
 function DashboardContent({
-  initialAlerts,
-  initialTourists
-}: DashboardClientProps) {
+  alerts,
+  setAlerts,
+  tourists,
+  setTourists,
+}: DashboardContentProps) {
   const { toast } = useToast();
-  const [alerts, setAlerts] = useState<Alert[]>(initialAlerts);
-  const [tourists, setTourists] = useState<Tourist[]>(initialTourists);
   const [isSimulating, setIsSimulating] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const [isFirDialogOpen, setIsFirDialogOpen] = useState(false);
@@ -524,5 +528,3 @@ function DashboardContent({
     </div>
   );
 }
-
-    

@@ -80,7 +80,7 @@ export default function Dashboard() {
                 Reports
               </Link>
               <Link
-                href="#"
+                href="/settings"
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
                 <Settings className="h-4 w-4" />
@@ -149,7 +149,7 @@ export default function Dashboard() {
                   Reports
                 </Link>
                 <Link
-                  href="#"
+                  href="/settings"
                   className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                 >
                   <Settings className="h-5 w-5" />
@@ -197,7 +197,7 @@ export default function Dashboard() {
           <div className="flex items-center">
             <h1 className="text-lg font-semibold md:text-2xl">Dashboard</h1>
           </div>
-          <DashboardClient initialAlerts={MOCK_ALERTS} initialTourists={MOCK_TOURISTS} />
+          <DashboardClient />
         </main>
       </div>
     </div>
