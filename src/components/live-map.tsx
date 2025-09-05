@@ -5,7 +5,6 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from 'leaflet';
 import { Tourist } from "@/lib/data";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useEffect, useState } from "react";
 
 const createTouristIcon = (tourist: Tourist) => {
     const iconHtml = `
@@ -22,16 +21,6 @@ const createTouristIcon = (tourist: Tourist) => {
 };
 
 export function LiveMap({ tourists }: { tourists: Tourist[] }) {
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
-    if (!isClient) {
-        return null; // Don't render on the server
-    }
-
     return (
         <MapContainer center={[26.2, 92.9]} zoom={7} scrollWheelZoom={false} className="h-full w-full">
             <TileLayer
@@ -61,3 +50,5 @@ export function LiveMap({ tourists }: { tourists: Tourist[] }) {
         </MapContainer>
     )
 }
+
+    

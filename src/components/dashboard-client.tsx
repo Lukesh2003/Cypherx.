@@ -1,21 +1,17 @@
 
-
 "use client";
 
 import React, { useState, createContext, useContext, useMemo, useEffect } from "react";
-import Image from "next/image";
+import dynamic from 'next/dynamic';
 import {
   Bell,
   CheckCircle2,
   FileText,
   Languages,
-  Map,
   MoreHorizontal,
-  PlusCircle,
   Siren,
   Users,
 } from "lucide-react";
-import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 
 
@@ -25,7 +21,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -44,7 +39,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, Tourist, MOCK_ALERTS, MOCK_TOURISTS } from "@/lib/data";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { detectAnomalousActivity } from "@/ai/flows/detect-anomalous-activity";
@@ -59,15 +53,12 @@ import {
 } from "./ui/select";
 import { translateTexts } from "@/ai/flows/translate-alerts-and-ui";
 import { ClientOnly } from "./client-only";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
-import { LiveMap } from "./live-map";
+import { TooltipProvider } from "./ui/tooltip";
 
-// Fix for default icon issue with Leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+// Dynamically import the LiveMap component with SSR disabled
+const LiveMap = dynamic(() => import('./live-map').then(mod => mod.LiveMap), {
+  ssr: false,
+  loading: () => <div className="h-full w-full bg-muted flex items-center justify-center"><p>Loading map...</p></div>
 });
 
 const TranslationContext = createContext({
@@ -179,6 +170,21 @@ export default function DashboardClient() {
   const [alerts, setAlerts] = useState<Alert[]>(MOCK_ALERTS);
   const [tourists, setTourists] = useState<Tourist[]>(MOCK_TOURISTS);
 
+  useEffect(() => {
+    // Import leaflet.css dynamically only on the client side
+    import('leaflet/dist/leaflet.css');
+
+    // Fix for default icon issue with Leaflet
+    if (typeof window !== 'undefined') {
+        delete (L.Icon.Default.prototype as any)._getIconUrl;
+        L.Icon.Default.mergeOptions({
+          iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+          iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+          shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+        });
+    }
+  }, []);
+
   return (
     <TranslationProvider initialAlerts={alerts} initialTourists={tourists}>
       <DashboardContent
@@ -281,7 +287,7 @@ function DashboardContent({
     setTourists(prev => prev.map(t => t.id === 't2' ? {...t, status: 'Alert'} : t));
     toast({
         title: 'SOS Alert!',
-        description: `${sosTourist.name} has activated the panic button.`,
+        description: `${getTranslation(sosTourist.name)} has activated the panic button.`,
         variant: 'destructive',
     });
   }
@@ -525,7 +531,7 @@ function DashboardContent({
                         variant="outline"
                         onClick={() => handleGenerateFir(alert)}
                       >
-                        <FileText className="mr-2 h-3 w-3" />
+                        <FileText className="mr-2 h-4 w-4" />
                         Generate FIR
                       </Button>
                     )}
@@ -547,3 +553,5 @@ function DashboardContent({
     </div>
   );
 }
+
+    
