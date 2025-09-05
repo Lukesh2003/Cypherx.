@@ -1,6 +1,7 @@
+
 "use client";
 
-import React, { useState, createContext, useContext, useMemo } from "react";
+import React, { useState, createContext, useContext, useMemo, useEffect } from "react";
 import Image from "next/image";
 import {
   Bell,
@@ -63,6 +64,7 @@ interface DashboardClientProps {
 const TranslationContext = createContext({
   language: 'en',
   getTranslation: (text: string) => text,
+  setLanguage: (language: string) => {},
 });
 
 const useTranslation = () => useContext(TranslationContext);
@@ -72,19 +74,13 @@ function TranslatedText({ children }: { children: string }) {
   return <>{getTranslation(children)}</>;
 }
 
-function TranslationProvider({ children }: { children: React.ReactNode }) {
+function TranslationProvider({ children, initialAlerts, initialTourists }: { children: React.ReactNode, initialAlerts: Alert[], initialTourists: Tourist[] }) {
     const { toast } = useToast();
     const [language, setLanguage] = useState('en');
     const [translations, setTranslations] = useState<Record<string, string>>({});
-    const [translationKeys, setTranslationKeys] = useState<Set<string>>(new Set());
+    const [isTranslating, setIsTranslating] = useState(false);
 
-    const registerTranslation = (text: string) => {
-        if (!translationKeys.has(text)) {
-            setTranslationKeys(prev => new Set(prev).add(text));
-        }
-    };
-    
-    React.useEffect(() => {
+    useEffect(() => {
         let isCancelled = false;
 
         async function doTranslate() {
@@ -92,18 +88,27 @@ function TranslationProvider({ children }: { children: React.ReactNode }) {
                 setTranslations({});
                 return;
             }
+            
+            setIsTranslating(true);
+            
+            const textsToTranslate = new Set<string>();
+            textsToTranslate.add("Total Tourists");
+            textsToTranslate.add("Active Alerts");
+            textsToTranslate.add("Resolved Incidents");
+            textsToTranslate.add("System Language");
+            textsToTranslate.add("Real-Time Locations");
+            textsToTranslate.add("Recent Tourists");
+            textsToTranslate.add("Alerts & Incidents");
+            initialTourists.forEach(t => textsToTranslate.add(t.status));
+            initialAlerts.forEach(a => textsToTranslate.add(a.status));
 
-            if (translationKeys.size === 0) {
-                return;
-            }
-
-            const textsToTranslate = Array.from(translationKeys);
+            const textsArray = Array.from(textsToTranslate);
 
             try {
-                const result = await translateTexts({ texts: textsToTranslate, language });
+                const result = await translateTexts({ texts: textsArray, language });
                 if (!isCancelled) {
                     const newTranslations: Record<string, string> = {};
-                    textsToTranslate.forEach((text, index) => {
+                    textsArray.forEach((text, index) => {
                         newTranslations[text] = result.translatedTexts[index];
                     });
                     setTranslations(newTranslations);
@@ -118,6 +123,10 @@ function TranslationProvider({ children }: { children: React.ReactNode }) {
                 if (!isCancelled) {
                     setTranslations({}); // Clear translations on error
                 }
+            } finally {
+                if (!isCancelled) {
+                    setIsTranslating(false);
+                }
             }
         }
 
@@ -126,13 +135,12 @@ function TranslationProvider({ children }: { children: React.ReactNode }) {
         return () => {
             isCancelled = true;
         };
-    }, [language, translationKeys, toast]);
+    }, [language, initialAlerts, initialTourists, toast]);
 
 
     const getTranslation = (text: string) => {
         if (!text) return '';
-        registerTranslation(text);
-        if (language === 'en') return text;
+        if (language === 'en' || isTranslating) return text;
         return translations[text] || text;
     };
 
@@ -140,17 +148,12 @@ function TranslationProvider({ children }: { children: React.ReactNode }) {
         language,
         setLanguage,
         getTranslation,
-    }), [language, translations]);
+    }), [language, translations, isTranslating]);
 
 
     return (
-        <TranslationContext.Provider value={{ language, getTranslation }}>
-            {React.Children.map(children, child => {
-                if (React.isValidElement(child)) {
-                    return React.cloneElement(child as React.ReactElement, { setLanguage });
-                }
-                return child;
-            })}
+        <TranslationContext.Provider value={value}>
+            {children}
         </TranslationContext.Provider>
     );
 }
@@ -160,7 +163,7 @@ export default function DashboardClient({
   initialTourists,
 }: DashboardClientProps) {
   return (
-    <TranslationProvider>
+    <TranslationProvider initialAlerts={initialAlerts} initialTourists={initialTourists}>
       <DashboardContent
         initialAlerts={initialAlerts}
         initialTourists={initialTourists}
@@ -171,16 +174,15 @@ export default function DashboardClient({
 
 function DashboardContent({
   initialAlerts,
-  initialTourists,
-  setLanguage,
-}: DashboardClientProps & { setLanguage?: (lang: string) => void }) {
+  initialTourists
+}: DashboardClientProps) {
   const { toast } = useToast();
   const [alerts, setAlerts] = useState<Alert[]>(initialAlerts);
   const [tourists, setTourists] = useState<Tourist[]>(initialTourists);
   const [isSimulating, setIsSimulating] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const [isFirDialogOpen, setIsFirDialogOpen] = useState(false);
-  const { language } = useTranslation();
+  const { language, setLanguage } = useTranslation();
 
   const activeAlertsCount = alerts.filter((a) => a.status === "Active").length;
 
@@ -353,7 +355,7 @@ function DashboardContent({
               </CardHeader>
               <CardContent>
                  <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
-                    <Image src="https://picsum.photos/1200/600" data-ai-hint="map satellite" alt="Map of tourist locations" layout="fill" objectFit="cover" />
+                    <Image src="https://picsum.photos/1200/600" data-ai-hint="map satellite" alt="Map of tourist locations" fill objectFit="cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end justify-center p-4">
                         <p className="text-white/80 text-sm bg-black/50 px-3 py-1 rounded-full">Map placeholder: Real-time tracking would be shown here.</p>
                     </div>
@@ -522,3 +524,5 @@ function DashboardContent({
     </div>
   );
 }
+
+    
