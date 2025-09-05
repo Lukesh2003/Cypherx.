@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import React, { useState, createContext, useContext, useMemo, useEffect } from "react";
@@ -14,6 +15,9 @@ import {
   Siren,
   Users,
 } from "lucide-react";
+import "leaflet/dist/leaflet.css";
+import L from 'leaflet';
+
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -56,6 +60,15 @@ import {
 import { translateTexts } from "@/ai/flows/translate-alerts-and-ui";
 import { ClientOnly } from "./client-only";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import { LiveMap } from "./live-map";
+
+// Fix for default icon issue with Leaflet
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+});
 
 const TranslationContext = createContext({
   language: 'en',
@@ -75,6 +88,22 @@ function TranslationProvider({ children, initialAlerts, initialTourists }: { chi
     const [language, setLanguage] = useState('en');
     const [translations, setTranslations] = useState<Record<string, string>>({});
     const [isTranslating, setIsTranslating] = useState(false);
+    const [translationKeys, setTranslationKeys] = useState(new Set<string>());
+
+    useEffect(() => {
+      const keys = new Set<string>();
+      keys.add("Total Tourists");
+      keys.add("Active Alerts");
+      keys.add("Resolved Incidents");
+      keys.add("System Language");
+      keys.add("Real-Time Locations");
+      keys.add("Recent Tourists");
+      keys.add("Alerts & Incidents");
+      initialTourists.forEach(t => keys.add(t.status));
+      initialAlerts.forEach(a => keys.add(a.status));
+      initialAlerts.forEach(a => keys.add(a.type));
+      setTranslationKeys(keys);
+    }, [initialAlerts, initialTourists]);
 
     useEffect(() => {
         let isCancelled = false;
@@ -84,22 +113,11 @@ function TranslationProvider({ children, initialAlerts, initialTourists }: { chi
                 setTranslations({});
                 return;
             }
-            
+            if (translationKeys.size === 0) return;
+
             setIsTranslating(true);
             
-            const textsToTranslate = new Set<string>();
-            textsToTranslate.add("Total Tourists");
-            textsToTranslate.add("Active Alerts");
-            textsToTranslate.add("Resolved Incidents");
-            textsToTranslate.add("System Language");
-            textsToTranslate.add("Real-Time Locations");
-            textsToTranslate.add("Recent Tourists");
-            textsToTranslate.add("Alerts & Incidents");
-            initialTourists.forEach(t => textsToTranslate.add(t.status));
-            initialAlerts.forEach(a => textsToTranslate.add(a.status));
-            initialAlerts.forEach(a => textsToTranslate.add(a.type));
-
-            const textsArray = Array.from(textsToTranslate);
+            const textsArray = Array.from(translationKeys);
 
             try {
                 const result = await translateTexts({ texts: textsArray, language });
@@ -132,7 +150,7 @@ function TranslationProvider({ children, initialAlerts, initialTourists }: { chi
         return () => {
             isCancelled = true;
         };
-    }, [language, initialAlerts, initialTourists, toast]);
+    }, [language, toast, translationKeys]);
 
 
     const getTranslation = (text: string) => {
@@ -279,19 +297,6 @@ function DashboardContent({
   const totalTourists = tourists.length;
   const resolvedIncidents = alerts.filter(a => a.status === 'Resolved').length;
 
-  const getPositionForLocation = (lat: number, lng: number) => {
-    // These are bounds for a map of India.
-    const bounds = {
-      top: 37.0,
-      bottom: 8.0,
-      left: 68.0,
-      right: 97.5,
-    };
-    const x = ((lng - bounds.left) / (bounds.right - bounds.left)) * 100;
-    const y = ((bounds.top - lat) / (bounds.top - bounds.bottom)) * 100;
-    return { x: `${x}%`, y: `${y}%` };
-  };
-
   return (
     <div
       className="flex flex-1 items-start justify-center rounded-lg border border-dashed shadow-sm"
@@ -376,29 +381,7 @@ function DashboardContent({
               </CardHeader>
               <CardContent>
                  <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
-                    <Image src="https://picsum.photos/1200/600?grayscale" data-ai-hint="map satellite" alt="Map of tourist locations" fill objectFit="cover" />
-                    {tourists.map((tourist) => {
-                      const { x, y } = getPositionForLocation(tourist.location.lat, tourist.location.lng);
-                      return (
-                        <Tooltip key={tourist.id}>
-                          <TooltipTrigger asChild>
-                            <div
-                              className="absolute -translate-x-1/2 -translate-y-1/2"
-                              style={{ left: x, top: y }}
-                            >
-                              <Avatar className={`h-8 w-8 border-2 ${tourist.status === 'Alert' ? 'border-red-500' : 'border-green-500'}`}>
-                                <AvatarImage src={tourist.avatar} alt={tourist.name} />
-                                <AvatarFallback>{tourist.name.charAt(0)}</AvatarFallback>
-                              </Avatar>
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{tourist.name}</p>
-                            <p className="text-xs text-muted-foreground">{tourist.lastSeen}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      );
-                    })}
+                    <LiveMap tourists={tourists} />
                 </div>
               </CardContent>
             </Card>
@@ -564,5 +547,3 @@ function DashboardContent({
     </div>
   );
 }
-
-    
