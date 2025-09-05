@@ -171,8 +171,6 @@ export default function DashboardClient() {
 
   useEffect(() => {
     (async () => {
-      // Import leaflet.css dynamically only on the client side
-      await import('leaflet/dist/leaflet.css');
       const L = (await import('leaflet')).default;
 
       // Fix for default icon issue with Leaflet in some module bundlers
@@ -387,9 +385,7 @@ function DashboardContent({
                 </CardDescription>
               </CardHeader>
               <CardContent className="h-[400px] w-full">
-                <ClientOnly>
-                  <LiveMap tourists={tourists} />
-                </ClientOnly>
+                <LiveMap tourists={tourists} />
               </CardContent>
             </Card>
 
@@ -554,3 +550,5 @@ function DashboardContent({
     </div>
   );
 }
+
+    
