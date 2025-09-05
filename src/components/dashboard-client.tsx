@@ -12,8 +12,6 @@ import {
   Siren,
   Users,
 } from "lucide-react";
-import L from 'leaflet';
-
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -52,7 +50,6 @@ import {
   SelectValue,
 } from "./ui/select";
 import { translateTexts } from "@/ai/flows/translate-alerts-and-ui";
-import { ClientOnly } from "./client-only";
 import { TooltipProvider } from "./ui/tooltip";
 
 // Dynamically import the LiveMap component with SSR disabled
@@ -166,23 +163,36 @@ function TranslationProvider({ children, initialAlerts, initialTourists }: { chi
     );
 }
 
+function ClientOnly({ children }: { children: React.ReactNode }) {
+    const [hasMounted, setHasMounted] = useState(false);
+    useEffect(() => {
+        setHasMounted(true);
+    }, []);
+    if (!hasMounted) {
+        return null;
+    }
+    return <>{children}</>;
+}
+
+
 export default function DashboardClient() {
   const [alerts, setAlerts] = useState<Alert[]>(MOCK_ALERTS);
   const [tourists, setTourists] = useState<Tourist[]>(MOCK_TOURISTS);
 
   useEffect(() => {
-    // Import leaflet.css dynamically only on the client side
-    import('leaflet/dist/leaflet.css');
+    (async () => {
+      // Import leaflet.css and leaflet library dynamically only on the client side
+      await import('leaflet/dist/leaflet.css');
+      const L = (await import('leaflet')).default;
 
-    // Fix for default icon issue with Leaflet
-    if (typeof window !== 'undefined') {
-        delete (L.Icon.Default.prototype as any)._getIconUrl;
-        L.Icon.Default.mergeOptions({
-          iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
-          iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-          shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-        });
-    }
+      // Fix for default icon issue with Leaflet
+      delete (L.Icon.Default.prototype as any)._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+        iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+      });
+    })();
   }, []);
 
   return (
@@ -553,5 +563,3 @@ function DashboardContent({
     </div>
   );
 }
-
-    
