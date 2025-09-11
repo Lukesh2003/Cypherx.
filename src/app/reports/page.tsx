@@ -35,7 +35,6 @@ import {
 } from '@/components/ui/table';
 import { MOCK_ALERTS, MOCK_TOURISTS } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
-import { ClientOnly } from '@/components/client-only';
 
 export default function ReportsPage() {
   return (
@@ -218,9 +217,7 @@ export default function ReportsPage() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <ClientOnly>
                           {new Date(alert.timestamp).toLocaleString()}
-                        </ClientOnly>
                       </TableCell>
                       <TableCell>
                         <Button asChild variant="outline" size="sm">
@@ -238,3 +235,5 @@ export default function ReportsPage() {
     </div>
   );
 }
+
+    

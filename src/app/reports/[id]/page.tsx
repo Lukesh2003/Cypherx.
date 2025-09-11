@@ -28,7 +28,6 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Logo } from '@/components/icons';
 import { MOCK_ALERTS, MOCK_TOURISTS } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
-import { ClientOnly } from '@/components/client-only';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 
@@ -145,7 +144,7 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
                         </div>
                          <div>
                             <p className="text-sm font-medium text-muted-foreground">Date</p>
-                            <p><ClientOnly>{new Date(alert.timestamp).toLocaleString()}</ClientOnly></p>
+                            <p>{new Date(alert.timestamp).toLocaleString()}</p>
                         </div>
                         <div>
                             <p className="text-sm font-medium text-muted-foreground">Location</p>
@@ -193,3 +192,5 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
     </div>
   );
 }
+
+    

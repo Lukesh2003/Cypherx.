@@ -51,7 +51,6 @@ import {
 } from "./ui/select";
 import { translateTexts } from "@/ai/flows/translate-alerts-and-ui";
 import { TooltipProvider } from "./ui/tooltip";
-import { ClientOnly } from "./client-only";
 
 // Dynamically import the LiveMap component with SSR disabled
 const LiveMap = dynamic(() => import('./live-map'), {
@@ -302,8 +301,6 @@ function DashboardContent({
   const totalTourists = tourists.length;
   const resolvedIncidents = alerts.filter(a => a.status === 'Resolved').length;
 
-  const memoizedMap = useMemo(() => <LiveMap tourists={tourists} />, [tourists]);
-
   return (
     <div
       className="flex flex-1 items-start justify-center rounded-lg border border-dashed shadow-sm"
@@ -387,9 +384,7 @@ function DashboardContent({
                 </CardDescription>
               </CardHeader>
               <CardContent className="h-[400px] w-full">
-                <ClientOnly>
-                  {memoizedMap}
-                </ClientOnly>
+                <LiveMap tourists={tourists} />
               </CardContent>
             </Card>
 
@@ -446,9 +441,7 @@ function DashboardContent({
                           {tourist.lastSeen}
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          <ClientOnly>
-                            {new Date(tourist.dateAdded).toLocaleDateString()}
-                          </ClientOnly>
+                          {(new Date(tourist.dateAdded).toLocaleDateString())}
                         </TableCell>
                         <TableCell>
                           <DropdownMenu>
@@ -512,9 +505,8 @@ function DashboardContent({
                       {alert.description}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      <ClientOnly>
                         {new Date(alert.timestamp).toLocaleString()}
-                      </ClientOnly>{" "}
+                      {" "}
                       at {alert.location}
                     </p>
                   </div>
@@ -554,3 +546,5 @@ function DashboardContent({
     </div>
   );
 }
+
+    

@@ -23,7 +23,7 @@ const createTouristIcon = (tourist: Tourist) => {
     });
 };
 
-export function LiveMap({ tourists }: { tourists: Tourist[] }) {
+export default function LiveMap({ tourists }: { tourists: Tourist[] }) {
     return (
         <MapContainer center={[26.8, 93.2]} zoom={8} scrollWheelZoom={true} className="h-full w-full rounded-lg">
             <TileLayer
@@ -59,3 +59,5 @@ export function LiveMap({ tourists }: { tourists: Tourist[] }) {
         </MapContainer>
     )
 }
+
+    
