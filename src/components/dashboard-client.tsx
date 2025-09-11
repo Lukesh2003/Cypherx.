@@ -220,11 +220,14 @@ function DashboardContent({
   const handleSimulateAnomaly = async () => {
     setIsSimulating(true);
     try {
+      // Use a known tourist for the simulation
+      const targetTourist = tourists[2]; // Ananya Reddy
       const { isAnomalous, anomalyDescription } =
         await detectAnomalousActivity({
           locationHistory: [
-            { latitude: 34.1, longitude: -118.3, timestamp: Date.now() - 10000 },
-            { latitude: 34.1, longitude: -118.3, timestamp: Date.now() },
+            { latitude: targetTourist.location.lat, longitude: targetTourist.location.lng, timestamp: Date.now() - 600000 },
+            { latitude: targetTourist.location.lat + 0.05, longitude: targetTourist.location.lng + 0.05, timestamp: Date.now() - 300000 },
+             { latitude: 34.1, longitude: -118.3, timestamp: Date.now() },
           ],
           activityThreshold: 0.1,
           timeThresholdSeconds: 300,
@@ -233,7 +236,7 @@ function DashboardContent({
       if (isAnomalous) {
         const newAlert: Alert = {
           id: `a${Date.now()}`,
-          touristId: "t3",
+          touristId: targetTourist.id,
           type: "Anomaly",
           description: anomalyDescription || "Unusual activity detected.",
           timestamp: new Date().toISOString(),
@@ -243,7 +246,7 @@ function DashboardContent({
         setAlerts((prev) => [newAlert, ...prev]);
         setTourists((prev) =>
           prev.map((t) =>
-            t.id === "t3" ? { ...t, status: "Alert" } : t
+            t.id === targetTourist.id ? { ...t, status: "Alert" } : t
           )
         );
         toast({
@@ -471,14 +474,14 @@ function DashboardContent({
             </Card>
           </div>
           <Card>
-            <CardHeader className="flex flex-row items-center gap-4">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="grid gap-2">
-                <CardTitle><TranslatedText>Alerts & Incidents</TranslatedText></CardTitle>
+                <CardTitle><TranslatedText>Alerts &amp; Incidents</TranslatedText></CardTitle>
                 <CardDescription>
                   Live feed of SOS and AI-detected anomalies.
                 </CardDescription>
               </div>
-               <div className="flex items-center gap-2 ml-auto">
+               <div className="flex flex-shrink-0 items-center gap-2">
                     <Button size="sm" variant="outline" onClick={handleSimulateSOS}>Simulate SOS</Button>
                     <Button size="sm" onClick={handleSimulateAnomaly} disabled={isSimulating}>
                         {isSimulating ? 'Simulating...' : 'Simulate Anomaly'}
@@ -547,3 +550,5 @@ function DashboardContent({
     </div>
   );
 }
+
+    
