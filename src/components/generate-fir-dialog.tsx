@@ -79,7 +79,7 @@ export default function GenerateFirDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-[625px]">
+      <DialogContent className="sm:max-w-[625px] z-[9999]">
         <DialogHeader>
           <DialogTitle>Generated First Information Report (FIR)</DialogTitle>
           <DialogDescription>
