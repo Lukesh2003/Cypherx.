@@ -12,6 +12,7 @@ import {
   Siren,
   Users,
 } from "lucide-react";
+import 'leaflet/dist/leaflet.css';
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -376,7 +377,7 @@ function DashboardContent({
         </div>
         <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3 w-full mt-8">
           <div className="grid auto-rows-max items-start gap-4 lg:gap-8 xl:col-span-2">
-            <Card className="xl:col-span-2 bg-muted">
+            <Card className="xl:col-span-2 bg-background">
               <CardHeader className="pb-3">
                 <CardTitle><TranslatedText>Real-Time Locations</TranslatedText></CardTitle>
                 <CardDescription>
@@ -441,7 +442,7 @@ function DashboardContent({
                           {tourist.lastSeen}
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          {(new Date(tourist.dateAdded).toLocaleDateString())}
+                          {new Date(tourist.dateAdded).toISOString().split('T')[0]}
                         </TableCell>
                         <TableCell>
                           <DropdownMenu>
@@ -505,7 +506,7 @@ function DashboardContent({
                       {alert.description}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                        {new Date(alert.timestamp).toLocaleString()}
+                      {new Date(alert.timestamp).toISOString().replace('T', ' ').substring(0, 19)}
                       {" "}
                       at {alert.location}
                     </p>
@@ -546,5 +547,3 @@ function DashboardContent({
     </div>
   );
 }
-
-    

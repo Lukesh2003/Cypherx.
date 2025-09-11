@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import {
   FileText,
@@ -217,7 +218,7 @@ export default function ReportsPage() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                          {new Date(alert.timestamp).toLocaleString()}
+                          {new Date(alert.timestamp).toISOString().replace('T', ' ').substring(0, 19)}
                       </TableCell>
                       <TableCell>
                         <Button asChild variant="outline" size="sm">
@@ -235,5 +236,3 @@ export default function ReportsPage() {
     </div>
   );
 }
-
-    

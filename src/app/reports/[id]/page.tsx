@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -144,7 +145,7 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
                         </div>
                          <div>
                             <p className="text-sm font-medium text-muted-foreground">Date</p>
-                            <p>{new Date(alert.timestamp).toLocaleString()}</p>
+                            <p>{new Date(alert.timestamp).toISOString().replace('T', ' ').substring(0, 19)}</p>
                         </div>
                         <div>
                             <p className="text-sm font-medium text-muted-foreground">Location</p>
@@ -192,5 +193,3 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
     </div>
   );
 }
-
-    
