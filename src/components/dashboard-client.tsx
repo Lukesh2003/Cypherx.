@@ -54,7 +54,7 @@ import { TooltipProvider } from "./ui/tooltip";
 import { ClientOnly } from "./client-only";
 
 // Dynamically import the LiveMap component with SSR disabled
-const LiveMap = dynamic(() => import('./live-map').then(mod => mod.LiveMap), {
+const LiveMap = dynamic(() => import('./live-map'), {
   ssr: false,
   loading: () => <div className="h-full w-full bg-muted flex items-center justify-center"><p>Loading map...</p></div>
 });
@@ -379,7 +379,7 @@ function DashboardContent({
         </div>
         <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3 w-full mt-8">
           <div className="grid auto-rows-max items-start gap-4 lg:gap-8 xl:col-span-2">
-            <Card className="xl:col-span-2">
+            <Card className="xl:col-span-2 bg-muted">
               <CardHeader className="pb-3">
                 <CardTitle><TranslatedText>Real-Time Locations</TranslatedText></CardTitle>
                 <CardDescription>
