@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import {
   Bell,
@@ -42,7 +43,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Logo } from '@/components/icons';
-import { MOCK_ALERTS, MOCK_TOURISTS } from '@/lib/data';
 import DashboardClient from '@/components/dashboard-client';
 
 export default function Dashboard() {
@@ -195,7 +195,7 @@ export default function Dashboard() {
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           <div className="flex items-center">
-            <h1 className="text-lg font-semibold md:text-2xl">Dashboard</h1>
+            <h1 className="text-lg font-semibold md:text-2l">Dashboard</h1>
           </div>
           <DashboardClient />
         </main>

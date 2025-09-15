@@ -38,7 +38,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Alert, Tourist, MOCK_ALERTS, MOCK_TOURISTS } from "@/lib/data";
+import { Alert, Tourist } from "@/lib/data";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { detectAnomalousActivity } from "@/ai/flows/detect-anomalous-activity";
 import { useToast } from "@/hooks/use-toast";
@@ -52,6 +52,7 @@ import {
 } from "./ui/select";
 import { translateTexts } from "@/ai/flows/translate-alerts-and-ui";
 import { TooltipProvider } from "./ui/tooltip";
+import { useData } from "@/app/context/data-context";
 
 // Dynamically import the LiveMap component with SSR disabled
 const LiveMap = dynamic(() => import('./live-map'), {
@@ -166,8 +167,7 @@ function TranslationProvider({ children, initialAlerts, initialTourists }: { chi
 
 
 export default function DashboardClient() {
-  const [alerts, setAlerts] = useState<Alert[]>(MOCK_ALERTS);
-  const [tourists, setTourists] = useState<Tourist[]>(MOCK_TOURISTS);
+  const { tourists, alerts, setAlerts, setTourists } = useData();
 
   useEffect(() => {
     (async () => {
@@ -186,30 +186,15 @@ export default function DashboardClient() {
 
   return (
     <TranslationProvider initialAlerts={alerts} initialTourists={tourists}>
-      <DashboardContent
-        alerts={alerts}
-        setAlerts={setAlerts}
-        tourists={tourists}
-        setTourists={setTourists}
-      />
+      <DashboardContent />
     </TranslationProvider>
   )
 }
 
-interface DashboardContentProps {
-    alerts: Alert[];
-    setAlerts: React.Dispatch<React.SetStateAction<Alert[]>>;
-    tourists: Tourist[];
-    setTourists: React.Dispatch<React.SetStateAction<Tourist[]>>;
-}
 
-function DashboardContent({
-  alerts,
-  setAlerts,
-  tourists,
-  setTourists,
-}: DashboardContentProps) {
+function DashboardContent() {
   const { toast } = useToast();
+  const { tourists, alerts, setAlerts, setTourists } = useData();
   const [isSimulating, setIsSimulating] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const [isFirDialogOpen, setIsFirDialogOpen] = useState(false);

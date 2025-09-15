@@ -21,8 +21,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { BookUser, Plane, Phone, User, UserPlus, Fingerprint, IdCard } from "lucide-react";
-import { MOCK_TOURISTS, Tourist } from "@/lib/data";
+import { Tourist } from "@/lib/data";
 import { Skeleton } from "./ui/skeleton";
+import { useData } from "@/app/context/data-context";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -37,6 +38,7 @@ const formSchema = z.object({
 export function TouristOnboardingForm() {
   const { toast } = useToast();
   const router = useRouter();
+  const { addTourist } = useData();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -75,7 +77,7 @@ export function TouristOnboardingForm() {
         avatar: `https://i.pravatar.cc/150?u=${Date.now()}`
     };
 
-    MOCK_TOURISTS.unshift(newTourist);
+    addTourist(newTourist);
     
     toast({
       title: "Registration Successful",
@@ -250,5 +252,3 @@ export function TouristOnboardingForm() {
     </Form>
   );
 }
-
-    

@@ -4,6 +4,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/components/theme-provider';
+import { DataProvider } from './context/data-context';
 
 export const metadata: Metadata = {
   title: 'Cypherx Shield',
@@ -36,7 +37,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
-          {children}
+          <DataProvider>
+            {children}
+          </DataProvider>
           <Toaster />
         </ThemeProvider>
       </body>
