@@ -42,6 +42,8 @@ export default function GenerateFirDialog({
           const response = await generateDummyFIR({
             touristName: tourist.name,
             passportNumber: tourist.passport,
+            aadhaarNumber: tourist.aadhaar,
+            drivingLicense: tourist.drivingLicense,
             itinerary: tourist.itinerary,
             emergencyContactName: tourist.emergencyContact.name,
             emergencyContactNumber: tourist.emergencyContact.phone,

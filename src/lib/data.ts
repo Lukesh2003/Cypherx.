@@ -3,6 +3,8 @@ export type Tourist = {
   id: string;
   name: string;
   passport: string;
+  aadhaar?: string;
+  drivingLicense?: string;
   itinerary: string;
   emergencyContact: {
     name: string;
@@ -30,6 +32,8 @@ export const MOCK_TOURISTS: Tourist[] = [
     id: 't1',
     name: 'Priya Sharma',
     passport: 'P12345678',
+    aadhaar: '1234 5678 9012',
+    drivingLicense: 'DL1420110012345',
     itinerary: 'Exploring Guwahati and nearby wildlife sanctuaries.',
     emergencyContact: { name: 'Rohan Sharma', phone: '+91-555-0101' },
     status: 'Alert',
@@ -84,3 +88,4 @@ export const MOCK_ALERTS: Alert[] = [
     status: 'Resolved',
   },
 ];
+

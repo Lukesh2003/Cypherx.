@@ -14,6 +14,8 @@ import {z} from 'genkit';
 const GenerateDummyFIRInputSchema = z.object({
   touristName: z.string().describe('The name of the missing tourist.'),
   passportNumber: z.string().describe('The passport number of the missing tourist.'),
+  aadhaarNumber: z.string().optional().describe('The Aadhaar number of the missing tourist.'),
+  drivingLicense: z.string().optional().describe('The driving license number of the missing tourist.'),
   itinerary: z.string().describe('The last known itinerary of the missing tourist.'),
   emergencyContactName: z.string().describe('Name of the emergency contact.'),
   emergencyContactNumber: z.string().describe('Number of the emergency contact.'),
@@ -38,10 +40,16 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateDummyFIROutputSchema},
   prompt: `You are an AI assistant specialized in generating preliminary First Information Reports (FIR) for missing tourists.
 
-  Given the following information about a missing tourist, generate a detailed and comprehensive dummy FIR report. The report should include all the provided details and be formatted in a way that is easily understandable by law enforcement agencies.  The FIR should include details like name, passport number, last known location, time last seen, emergency contact details, and itinerary.  Make it sound realistic and save time for the police to create an official one.
+  Given the following information about a missing tourist, generate a detailed and comprehensive dummy FIR report. The report should include all the provided details and be formatted in a way that is easily understandable by law enforcement agencies.  The FIR should include details like name, passport number, Aadhaar number, driving license, last known location, time last seen, emergency contact details, and itinerary. Make it sound realistic and save time for the police to create an official one.
 
   Tourist Name: {{{touristName}}}
   Passport Number: {{{passportNumber}}}
+  {{#if aadhaarNumber}}
+  Aadhaar Number: {{{aadhaarNumber}}}
+  {{/if}}
+  {{#if drivingLicense}}
+  Driving License: {{{drivingLicense}}}
+  {{/if}}
   Itinerary: {{{itinerary}}}
   Emergency Contact Name: {{{emergencyContactName}}}
   Emergency Contact Number: {{{emergencyContactNumber}}}

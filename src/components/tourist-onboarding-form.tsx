@@ -18,12 +18,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { BookUser, Plane, Phone, User, UserPlus } from "lucide-react";
+import { BookUser, Plane, Phone, User, UserPlus, Fingerprint, IdCard } from "lucide-react";
 import { MOCK_TOURISTS, Tourist } from "@/lib/data";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   passport: z.string().min(8, "Passport number seems too short.").max(12, "Passport number seems too long."),
+  aadhaar: z.string().optional(),
+  drivingLicense: z.string().optional(),
   itinerary: z.string().min(10, "Please provide a brief itinerary."),
   emergencyContactName: z.string().min(2, "Contact name must be at least 2 characters."),
   emergencyContactPhone: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number format."),
@@ -38,6 +40,8 @@ export function TouristOnboardingForm() {
     defaultValues: {
       name: "",
       passport: "",
+      aadhaar: "",
+      drivingLicense: "",
       itinerary: "",
       emergencyContactName: "",
       emergencyContactPhone: "",
@@ -49,6 +53,8 @@ export function TouristOnboardingForm() {
         id: `t${Date.now()}`,
         name: values.name,
         passport: values.passport,
+        aadhaar: values.aadhaar,
+        drivingLicense: values.drivingLicense,
         itinerary: values.itinerary,
         emergencyContact: {
             name: values.emergencyContactName,
@@ -90,16 +96,50 @@ export function TouristOnboardingForm() {
             </FormItem>
           )}
         />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+            control={form.control}
+            name="passport"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Passport Number</FormLabel>
+                <FormControl>
+                    <div className="relative">
+                    <BookUser className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="e.g. A12345678" {...field} className="pl-9" />
+                    </div>
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+            <FormField
+            control={form.control}
+            name="aadhaar"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Aadhaar Number</FormLabel>
+                <FormControl>
+                    <div className="relative">
+                    <Fingerprint className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="e.g. 1234 5678 9012" {...field} className="pl-9" />
+                    </div>
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+        </div>
         <FormField
           control={form.control}
-          name="passport"
+          name="drivingLicense"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Passport Number</FormLabel>
+              <FormLabel>Driving License</FormLabel>
               <FormControl>
                 <div className="relative">
-                  <BookUser className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="e.g. A12345678" {...field} className="pl-9" />
+                  <IdCard className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input placeholder="e.g. DL-1420110012345" {...field} className="pl-9" />
                 </div>
               </FormControl>
               <FormMessage />
