@@ -16,7 +16,7 @@ export type Tourist = {
 };
 
 export type Alert = {
-  id: string;
+  id:string;
   touristId: string;
   type: 'SOS' | 'Anomaly';
   description: string;
@@ -30,11 +30,11 @@ export const MOCK_TOURISTS: Tourist[] = [
     id: 't1',
     name: 'Priya Sharma',
     passport: 'P12345678',
-    itinerary: 'Visiting temples in Varanasi.',
+    itinerary: 'Exploring Guwahati and nearby wildlife sanctuaries.',
     emergencyContact: { name: 'Rohan Sharma', phone: '+91-555-0101' },
     status: 'Alert',
     lastSeen: '2 hours ago',
-    location: { lat: 25.3176, lng: 82.9739 },
+    location: { lat: 26.1445, lng: 91.7362 },
     dateAdded: '2023-10-26T10:00:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d',
   },
@@ -42,11 +42,11 @@ export const MOCK_TOURISTS: Tourist[] = [
     id: 't2',
     name: 'Arjun Gupta',
     passport: 'G87654321',
-    itinerary: 'Exploring historical sites in Delhi.',
+    itinerary: 'Visiting the scenic hills of Shillong.',
     emergencyContact: { name: 'Sunita Gupta', phone: '+91-555-0102' },
     status: 'Safe',
     lastSeen: '15 minutes ago',
-    location: { lat: 28.7041, lng: 77.1025 },
+    location: { lat: 25.5788, lng: 91.8933 },
     dateAdded: '2023-10-26T11:30:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
   },
@@ -54,11 +54,11 @@ export const MOCK_TOURISTS: Tourist[] = [
     id: 't3',
     name: 'Ananya Reddy',
     passport: 'R24681357',
-    itinerary: 'Houseboat cruise in Kerala backwaters.',
+    itinerary: 'Trekking in the mountains near Itanagar.',
     emergencyContact: { name: 'Vijay Reddy', phone: '+91-555-0103' },
     status: 'Safe',
     lastSeen: '45 minutes ago',
-    location: { lat: 9.9312, lng: 76.2673 },
+    location: { lat: 27.0933, lng: 93.6053 },
     dateAdded: '2023-10-25T14:00:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a04258114e29026702d',
   },
@@ -71,7 +71,7 @@ export const MOCK_ALERTS: Alert[] = [
     type: 'SOS',
     description: 'Tourist activated panic button.',
     timestamp: '2023-10-26T12:00:00Z',
-    location: 'Ganges River Bank, Varanasi',
+    location: 'Kamakhya Temple, Guwahati',
     status: 'Active',
   },
   {
@@ -80,7 +80,7 @@ export const MOCK_ALERTS: Alert[] = [
     type: 'Anomaly',
     description: 'Prolonged stop detected.',
     timestamp: '2023-10-25T18:30:00Z',
-    location: 'Connaught Place, Delhi',
+    location: 'Police Bazar, Shillong',
     status: 'Resolved',
   },
 ];
