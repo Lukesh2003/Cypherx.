@@ -474,7 +474,7 @@ function DashboardContent({
             </Card>
           </div>
           <Card>
-            <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <CardHeader className="flex flex-wrap items-center justify-between gap-4">
               <div className="grid gap-2">
                 <CardTitle><TranslatedText>Alerts &amp; Incidents</TranslatedText></CardTitle>
                 <CardDescription>
@@ -501,14 +501,14 @@ function DashboardContent({
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid gap-1 flex-1">
-                    <p className="text-sm font-medium leading-none">
+                    <p className="text-sm font-medium leading-none break-words">
                       {getTranslation(alert.type) === 'SOS' ? "SOS Signal" : "AI Anomaly"} from{" "}
                       {getTouristById(alert.touristId)?.name}
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground break-words">
                       {alert.description}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-muted-foreground mt-1 break-words">
                       {new Date(alert.timestamp).toISOString().replace('T', ' ').substring(0, 19)}
                       {" "}
                       at {alert.location}
@@ -550,5 +550,3 @@ function DashboardContent({
     </div>
   );
 }
-
-    
