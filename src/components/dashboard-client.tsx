@@ -3,6 +3,7 @@
 
 import React, { useState, createContext, useContext, useMemo, useEffect } from "react";
 import dynamic from 'next/dynamic';
+import { useRouter } from "next/navigation";
 import {
   Bell,
   CheckCircle2,
@@ -73,14 +74,14 @@ function TranslatedText({ children }: { children: string }) {
   return <>{getTranslation(children)}</>;
 }
 
-function TranslationProvider({ children, initialAlerts, initialTourists }: { children: React.ReactNode, initialAlerts: Alert[], initialTourists: Tourist[] }) {
+function TranslationProvider({ children }: { children: React.ReactNode }) {
     const { toast } = useToast();
     const [language, setLanguage] = useState('en');
     const [translations, setTranslations] = useState<Record<string, string>>({});
     const [isTranslating, setIsTranslating] = useState(false);
-    const [translationKeys, setTranslationKeys] = useState(new Set<string>());
+    const { alerts, tourists } = useData();
 
-    useEffect(() => {
+    const translationKeys = useMemo(() => {
       const keys = new Set<string>();
       keys.add("Total Tourists");
       keys.add("Active Alerts");
@@ -89,11 +90,11 @@ function TranslationProvider({ children, initialAlerts, initialTourists }: { chi
       keys.add("Real-Time Locations");
       keys.add("Recent Tourists");
       keys.add("Alerts & Incidents");
-      initialTourists.forEach(t => keys.add(t.status));
-      initialAlerts.forEach(a => keys.add(a.status));
-      initialAlerts.forEach(a => keys.add(a.type));
-      setTranslationKeys(keys);
-    }, [initialAlerts, initialTourists]);
+      tourists.forEach(t => keys.add(t.status));
+      alerts.forEach(a => keys.add(a.status));
+      alerts.forEach(a => keys.add(a.type));
+      return keys;
+    }, [alerts, tourists]);
 
     useEffect(() => {
         let isCancelled = false;
@@ -167,7 +168,7 @@ function TranslationProvider({ children, initialAlerts, initialTourists }: { chi
 
 
 export default function DashboardClient() {
-  const { tourists, alerts, setAlerts, setTourists } = useData();
+  const { alerts, tourists } = useData();
 
   useEffect(() => {
     (async () => {
@@ -185,7 +186,7 @@ export default function DashboardClient() {
   }, []);
 
   return (
-    <TranslationProvider initialAlerts={alerts} initialTourists={tourists}>
+    <TranslationProvider>
       <DashboardContent />
     </TranslationProvider>
   )
@@ -199,6 +200,7 @@ function DashboardContent() {
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const [isFirDialogOpen, setIsFirDialogOpen] = useState(false);
   const { language, setLanguage, getTranslation } = useTranslation();
+  const router = useRouter();
 
   const activeAlertsCount = alerts.filter((a) => a.status === "Active").length;
 
@@ -207,6 +209,10 @@ function DashboardContent() {
     try {
       // Use a known tourist for the simulation
       const targetTourist = tourists[2]; // Ananya Reddy
+      if (!targetTourist) {
+        toast({ title: "Simulation Failed", description: "Not enough tourist data to run simulation."});
+        return;
+      }
       const { isAnomalous, anomalyDescription } =
         await detectAnomalousActivity({
           locationHistory: [
@@ -289,6 +295,15 @@ function DashboardContent() {
 
   const totalTourists = tourists.length;
   const resolvedIncidents = alerts.filter(a => a.status === 'Resolved').length;
+
+  const handleViewDetails = (touristId: string) => {
+    router.push(`/tourist/${touristId}`);
+  };
+
+  const handleContact = (tourist: Tourist) => {
+    const email = tourist.emergencyContact.phone; // Assuming phone is email for now
+    window.location.href = `mailto:${email}`;
+  };
 
   return (
     <div
@@ -446,8 +461,8 @@ function DashboardContent() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem>View Details</DropdownMenuItem>
-                              <DropdownMenuItem>Contact</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleViewDetails(tourist.id)}>View Details</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleContact(tourist)}>Contact</DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
@@ -535,3 +550,5 @@ function DashboardContent() {
     </div>
   );
 }
+
+    
