@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export default function OnboardingPage() {
   return (
-    <div className="flex min-h-screen w-full flex-col items-center justify-center bg-muted/40 p-4">
+    <div suppressHydrationWarning className="flex min-h-screen w-full flex-col items-center justify-center bg-muted/40 p-4">
        <div className="mb-8 text-center">
         <Link href="/" className="flex items-center justify-center gap-2 font-semibold text-2xl">
             <Logo className="h-8 w-8 text-primary" />
