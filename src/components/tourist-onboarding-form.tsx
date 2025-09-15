@@ -1,9 +1,11 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { BookUser, Plane, Phone, User, UserPlus, Fingerprint, IdCard } from "lucide-react";
 import { MOCK_TOURISTS, Tourist } from "@/lib/data";
+import { Skeleton } from "./ui/skeleton";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -34,6 +37,11 @@ const formSchema = z.object({
 export function TouristOnboardingForm() {
   const { toast } = useToast();
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,7 +70,7 @@ export function TouristOnboardingForm() {
         },
         status: 'Safe',
         lastSeen: 'Just now',
-        location: { lat: 0, lng: 0 }, // Default location, should be updated by tracking
+        location: { lat: 26.1445, lng: 91.7362 }, 
         dateAdded: new Date().toISOString(),
         avatar: `https://i.pravatar.cc/150?u=${Date.now()}`
     };
@@ -75,6 +83,36 @@ export function TouristOnboardingForm() {
     });
     
     router.push("/");
+  }
+
+  if (!isClient) {
+    return (
+        <div className="space-y-6">
+            <div className="space-y-2">
+                <Skeleton className="h-4 w-1/4" />
+                <Skeleton className="h-10 w-full" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <Skeleton className="h-4 w-1/4" />
+                    <Skeleton className="h-10 w-full" />
+                </div>
+                 <div className="space-y-2">
+                    <Skeleton className="h-4 w-1/4" />
+                    <Skeleton className="h-10 w-full" />
+                </div>
+            </div>
+             <div className="space-y-2">
+                <Skeleton className="h-4 w-1/4" />
+                <Skeleton className="h-10 w-full" />
+            </div>
+             <div className="space-y-2">
+                <Skeleton className="h-4 w-1/4" />
+                <Skeleton className="h-20 w-full" />
+            </div>
+            <Skeleton className="h-10 w-full" />
+        </div>
+    );
   }
 
   return (
@@ -212,3 +250,5 @@ export function TouristOnboardingForm() {
     </Form>
   );
 }
+
+    
