@@ -14,8 +14,8 @@ import {z} from 'genkit';
 const GenerateDummyFIRInputSchema = z.object({
   touristName: z.string().describe('The name of the missing tourist.'),
   passportNumber: z.string().describe('The passport number of the missing tourist.'),
-  aadhaarNumber: z.string().optional().describe('The Aadhaar number of the missing tourist.'),
-  drivingLicense: z.string().optional().describe('The driving license number of the missing tourist.'),
+  aadhaarNumber: z.string().optional().describe('The Aadhaar number of the missing tourist, if available.'),
+  drivingLicense: z.string().optional().describe('The driving license number of the missing tourist, if available.'),
   itinerary: z.string().describe('The last known itinerary of the missing tourist.'),
   emergencyContactName: z.string().describe('Name of the emergency contact.'),
   emergencyContactNumber: z.string().describe('Number of the emergency contact.'),
