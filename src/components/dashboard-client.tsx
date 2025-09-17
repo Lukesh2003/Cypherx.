@@ -57,6 +57,7 @@ import { Label } from "./ui/label";
 import { translateTexts } from "@/ai/flows/translate-alerts-and-ui";
 import { TooltipProvider } from "./ui/tooltip";
 import { useData } from "@/app/context/data-context";
+import { SafetyScoreCard } from "./safety-score-card";
 
 // Dynamically import the LiveMap component with SSR disabled
 const LiveMap = dynamic(() => import('./live-map'), {
@@ -208,6 +209,11 @@ function DashboardContent() {
   const router = useRouter();
 
   const activeAlertsCount = alerts.filter((a) => a.status === "Active").length;
+  const averageSafetyScore = useMemo(() => {
+    if (tourists.length === 0) return 0;
+    const totalScore = tourists.reduce((acc, t) => acc + t.safeScore, 0);
+    return Math.round(totalScore / tourists.length);
+  }, [tourists]);
 
   const handleSimulateAnomaly = async () => {
     setIsSimulating(true);
@@ -359,20 +365,11 @@ function DashboardContent() {
               </p>
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                <TranslatedText>High-Risk Zones</TranslatedText>
-              </CardTitle>
-              <Thermometer className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-               <div className="flex items-center space-x-2">
-                <Switch id="heatmap-toggle" checked={showHeatmap} onCheckedChange={setShowHeatmap} />
-                <Label htmlFor="heatmap-toggle" className="text-xs text-muted-foreground">Show heatmap</Label>
-              </div>
-            </CardContent>
-          </Card>
+           <SafetyScoreCard
+            score={averageSafetyScore}
+            showHeatmap={showHeatmap}
+            onHeatmapToggle={setShowHeatmap}
+           />
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">

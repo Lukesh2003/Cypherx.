@@ -13,6 +13,7 @@ export type Tourist = {
   status: 'Safe' | 'Alert' | 'Missing';
   lastSeen: string;
   location: { lat: number; lng: number };
+  safeScore: number;
   dateAdded: string;
   avatar: string;
 };
@@ -39,6 +40,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     status: 'Alert',
     lastSeen: '2 hours ago',
     location: { lat: 26.9138, lng: 94.2237 }, // Majuli
+    safeScore: 78,
     dateAdded: '2023-10-26T10:00:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d',
   },
@@ -51,6 +53,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     status: 'Safe',
     lastSeen: '15 minutes ago',
     location: { lat: 25.2709, lng: 91.7323 }, // Cherrapunji
+    safeScore: 92,
     dateAdded: '2023-10-26T11:30:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
   },
@@ -63,6 +66,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     status: 'Safe',
     lastSeen: '45 minutes ago',
     location: { lat: 27.3389, lng: 88.6065 }, // Gangtok
+    safeScore: 85,
     dateAdded: '2023-10-25T14:00:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a04258114e29026702d',
   },
@@ -75,6 +79,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     status: 'Safe',
     lastSeen: '3 hours ago',
     location: { lat: 25.6163, lng: 94.1186 }, // Dzukou Valley
+    safeScore: 88,
     dateAdded: '2023-10-24T09:00:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026705d'
   },
@@ -87,6 +92,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     status: 'Safe',
     lastSeen: '1 hour ago',
     location: { lat: 27.5859, lng: 91.8592 }, // Tawang
+    safeScore: 95,
     dateAdded: '2023-10-23T16:45:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026706d'
   },
@@ -99,6 +105,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     status: 'Safe',
     lastSeen: '30 minutes ago',
     location: { lat: 26.5822, lng: 93.3644 }, // Kaziranga
+    safeScore: 82,
     dateAdded: '2023-10-27T08:00:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026707d',
   },
@@ -111,6 +118,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     status: 'Safe',
     lastSeen: '1 hour ago',
     location: { lat: 25.673, lng: 91.905 }, // Umiam Lake
+    safeScore: 90,
     dateAdded: '2023-10-27T09:15:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026708e',
   },
@@ -123,6 +131,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     status: 'Safe',
     lastSeen: '5 hours ago',
     location: { lat: 26.1664, lng: 91.7056 },
+    safeScore: 75,
     dateAdded: '2023-10-22T11:00:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026709f',
   },
@@ -135,6 +144,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     status: 'Safe',
     lastSeen: '2 days ago',
     location: { lat: 27.6335, lng: 93.8324 },
+    safeScore: 98,
     dateAdded: '2023-10-21T18:00:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026710a',
   },
@@ -147,6 +157,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     status: 'Safe',
     lastSeen: '1 day ago',
     location: { lat: 23.4939, lng: 91.3155 },
+    safeScore: 80,
     dateAdded: '2023-10-20T12:30:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026711b',
   },
@@ -159,6 +170,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     status: 'Safe',
     lastSeen: '6 hours ago',
     location: { lat: 22.628, lng: 93.0485 },
+    safeScore: 89,
     dateAdded: '2023-10-28T06:00:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026712c'
   },
@@ -171,6 +183,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     status: 'Safe',
     lastSeen: '4 hours ago',
     location: { lat: 24.0818, lng: 92.0163 },
+    safeScore: 84,
     dateAdded: '2023-10-28T09:30:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026713d'
   }
