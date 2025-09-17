@@ -30,19 +30,29 @@ const HeatmapLayer = ({ show }: { show: boolean }) => {
     const map = useMap();
 
     useEffect(() => {
-        if (!show) return;
+        if (!show) {
+            // If a heatmap layer exists, remove it
+            map.eachLayer(layer => {
+                if (layer instanceof (L as any).HeatLayer) {
+                    map.removeLayer(layer);
+                }
+            });
+            return;
+        }
 
-        const heatLayer = L.heatLayer(MOCK_HIGH_RISK_ZONES, {
-            radius: 25,
-            blur: 15,
-            maxZoom: 18,
-            gradient: { 0.4: 'blue', 0.65: 'lime', 1: 'red' }
+        const heatLayer = (L as any).heatLayer(MOCK_HIGH_RISK_ZONES, {
+            radius: 35,
+            blur: 20,
+            maxZoom: 17,
+            gradient: { 0.4: 'blue', 0.6: 'lime', 0.8: 'yellow', 1: 'red' }
         });
 
         map.addLayer(heatLayer);
 
         return () => {
-            map.removeLayer(heatLayer);
+            if (map.hasLayer(heatLayer)) {
+                map.removeLayer(heatLayer);
+            }
         };
     }, [map, show]);
 
