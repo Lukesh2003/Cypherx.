@@ -4,7 +4,7 @@
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from 'leaflet';
 import 'leaflet.heat';
-import MarkerClusterGroup from 'react-leaflet-markercluster';
+import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 
 import { Tourist, MOCK_HIGH_RISK_ZONES } from "@/lib/data";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
