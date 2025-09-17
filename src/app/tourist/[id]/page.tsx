@@ -11,6 +11,7 @@ import {
   Users,
 } from 'lucide-react';
 import { useParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -33,7 +34,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { useData } from '@/app/context/data-context';
-import { Alert } from '@/lib/data';
+import { Alert, Tourist } from '@/lib/data';
 import {
   Table,
   TableBody,
@@ -42,22 +43,35 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import TouristDetailsSkeleton from '@/components/tourist-details-skeleton';
 
 export default function TouristDetailsPage() {
     const params = useParams();
     const { id } = params;
     const { tourists, alerts } = useData();
 
-    const tourist = tourists.find(t => t.id === id);
-    const touristAlerts = alerts.filter(a => a.touristId === id);
+    const [tourist, setTourist] = useState<Tourist | null | undefined>(null);
+    
+    useEffect(() => {
+        const foundTourist = tourists.find(t => t.id === id);
+        setTourist(foundTourist);
+    }, [id, tourists]);
 
-    if (!tourist) {
+
+    if (tourist === null) {
+        return <TouristDetailsSkeleton />;
+    }
+
+    if (tourist === undefined) {
         return (
         <div className="flex min-h-screen w-full items-center justify-center">
             Tourist not found.
         </div>
         );
     }
+
+    const touristAlerts = alerts.filter(a => a.touristId === id);
+
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
