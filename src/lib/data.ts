@@ -34,7 +34,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     passport: 'P12345678',
     aadhaar: '1234 5678 9012',
     drivingLicense: 'DL1420110012345',
-    itinerary: 'Exploring the river island of Majuli.',
+    itinerary: 'Exploring the river island of Majuli, Assam.',
     emergencyContact: { name: 'Rohan Sharma', phone: '+91-555-0101' },
     status: 'Alert',
     lastSeen: '2 hours ago',
@@ -46,7 +46,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     id: 't2',
     name: 'Arjun Gupta',
     passport: 'G87654321',
-    itinerary: 'Visiting the living root bridges in Cherrapunji.',
+    itinerary: 'Visiting the living root bridges in Cherrapunji, Meghalaya.',
     emergencyContact: { name: 'Sunita Gupta', phone: '+91-555-0102' },
     status: 'Safe',
     lastSeen: '15 minutes ago',
@@ -58,7 +58,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     id: 't3',
     name: 'Ananya Reddy',
     passport: 'R24681357',
-    itinerary: 'Enjoying the views of Kanchenjunga from Gangtok.',
+    itinerary: 'Enjoying the views of Kanchenjunga from Gangtok, Sikkim.',
     emergencyContact: { name: 'Vijay Reddy', phone: '+91-555-0103' },
     status: 'Safe',
     lastSeen: '45 minutes ago',
@@ -66,6 +66,30 @@ export const MOCK_TOURISTS: Tourist[] = [
     dateAdded: '2023-10-25T14:00:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a04258114e29026702d',
   },
+  {
+    id: 't4',
+    name: 'Rohan Mehra',
+    passport: 'M78901234',
+    itinerary: 'Trekking in Dzukou Valley, Nagaland.',
+    emergencyContact: { name: 'Kavita Mehra', phone: '+91-555-0104' },
+    status: 'Safe',
+    lastSeen: '3 hours ago',
+    location: { lat: 25.6163, lng: 94.1186 },
+    dateAdded: '2023-10-24T09:00:00Z',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026705d'
+  },
+  {
+    id: 't5',
+    name: 'Isha Singh',
+    passport: 'S54321098',
+    itinerary: 'Visiting Tawang Monastery in Arunachal Pradesh.',
+    emergencyContact: { name: 'Amit Singh', phone: '+91-555-0105' },
+    status: 'Safe',
+    lastSeen: '1 hour ago',
+    location: { lat: 27.5859, lng: 91.8592 },
+    dateAdded: '2023-10-23T16:45:00Z',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026706d'
+  }
 ];
 
 export const MOCK_ALERTS: Alert[] = [
