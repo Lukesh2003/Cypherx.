@@ -15,10 +15,6 @@ import {
   Map,
   Thermometer
 } from "lucide-react";
-import 'leaflet/dist/leaflet.css';
-import 'leaflet.markercluster/dist/MarkerCluster.css';
-import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
-
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -281,7 +277,7 @@ function DashboardContent() {
         touristId: 't2',
         type: 'SOS',
         description: 'Panic button activated by tourist.',
-        timestamp: new Date().toISOString(),
+        timestamp: '2023-10-27T10:30:00Z',
         location: 'City Center Plaza',
         status: 'Active',
     };
