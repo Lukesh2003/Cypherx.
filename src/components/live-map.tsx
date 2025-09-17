@@ -92,3 +92,5 @@ export default function LiveMap({ tourists, showHeatmap }: { tourists: Tourist[]
         </MapContainer>
     )
 }
+
+    
