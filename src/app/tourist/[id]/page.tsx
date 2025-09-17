@@ -196,6 +196,10 @@ export default function TouristDetailsPage() {
                             <p className="text-sm font-medium text-muted-foreground">Date Registered</p>
                             <p>{new Date(tourist.dateAdded).toLocaleDateString()}</p>
                         </div>
+                        <div>
+                            <p className="text-sm font-medium text-muted-foreground">Location Safety Score</p>
+                            <p className="font-semibold text-lg">{tourist.safeScore}</p>
+                        </div>
                     </div>
                 </div>
             </CardContent>
@@ -249,5 +253,3 @@ export default function TouristDetailsPage() {
     </div>
   );
 }
-
-    

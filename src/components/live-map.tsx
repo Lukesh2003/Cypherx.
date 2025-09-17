@@ -89,6 +89,7 @@ export default function LiveMap({ tourists, showHeatmap }: { tourists: Tourist[]
                                 </div>
                                 <div>
                                     <p className="text-sm">Status: <Badge variant={tourist.status === 'Alert' ? 'destructive' : 'secondary'}>{tourist.status}</Badge></p>
+                                    <p className="text-sm mt-1">Safety Score: <span className="font-bold">{tourist.safeScore}</span></p>
                                     <p className="text-xs text-muted-foreground mt-1">Last seen: {tourist.lastSeen}</p>
                                 </div>
                             </div>
