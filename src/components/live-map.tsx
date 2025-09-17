@@ -7,7 +7,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from 'leaflet';
 import 'leaflet.heat';
-import MarkerClusterGroup from 'react-leaflet-markercluster';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 
 import { Tourist, MOCK_HIGH_RISK_ZONES } from "@/lib/data";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -33,6 +33,8 @@ const HeatmapLayer = ({ show }: { show: boolean }) => {
     const map = useMap();
 
     useEffect(() => {
+        if (!show) return;
+
         const heatLayer = L.heatLayer(MOCK_HIGH_RISK_ZONES, {
             radius: 25,
             blur: 15,
@@ -40,9 +42,7 @@ const HeatmapLayer = ({ show }: { show: boolean }) => {
             gradient: { 0.4: 'blue', 0.65: 'lime', 1: 'red' }
         });
 
-        if (show) {
-            map.addLayer(heatLayer);
-        }
+        map.addLayer(heatLayer);
 
         return () => {
             map.removeLayer(heatLayer);
