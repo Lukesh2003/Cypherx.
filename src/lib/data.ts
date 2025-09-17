@@ -38,7 +38,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     emergencyContact: { name: 'Rohan Sharma', phone: '+91-555-0101' },
     status: 'Alert',
     lastSeen: '2 hours ago',
-    location: { lat: 26.9138, lng: 94.2237 },
+    location: { lat: 26.9138, lng: 94.2237 }, // Majuli
     dateAdded: '2023-10-26T10:00:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d',
   },
@@ -50,7 +50,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     emergencyContact: { name: 'Sunita Gupta', phone: '+91-555-0102' },
     status: 'Safe',
     lastSeen: '15 minutes ago',
-    location: { lat: 25.2709, lng: 91.7323 },
+    location: { lat: 25.2709, lng: 91.7323 }, // Cherrapunji
     dateAdded: '2023-10-26T11:30:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
   },
@@ -62,7 +62,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     emergencyContact: { name: 'Vijay Reddy', phone: '+91-555-0103' },
     status: 'Safe',
     lastSeen: '45 minutes ago',
-    location: { lat: 27.3389, lng: 88.6065 },
+    location: { lat: 27.3389, lng: 88.6065 }, // Gangtok
     dateAdded: '2023-10-25T14:00:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a04258114e29026702d',
   },
@@ -74,7 +74,7 @@ export const MOCK_TOURISTS: Tourist[] = [
     emergencyContact: { name: 'Kavita Mehra', phone: '+91-555-0104' },
     status: 'Safe',
     lastSeen: '3 hours ago',
-    location: { lat: 25.6163, lng: 94.1186 },
+    location: { lat: 25.6163, lng: 94.1186 }, // Dzukou Valley
     dateAdded: '2023-10-24T09:00:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026705d'
   },
@@ -86,9 +86,93 @@ export const MOCK_TOURISTS: Tourist[] = [
     emergencyContact: { name: 'Amit Singh', phone: '+91-555-0105' },
     status: 'Safe',
     lastSeen: '1 hour ago',
-    location: { lat: 27.5859, lng: 91.8592 },
+    location: { lat: 27.5859, lng: 91.8592 }, // Tawang
     dateAdded: '2023-10-23T16:45:00Z',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026706d'
+  },
+  {
+    id: 't6',
+    name: 'Vikram Bose',
+    passport: 'B98765432',
+    itinerary: 'Exploring Kaziranga National Park, Assam.',
+    emergencyContact: { name: 'Nisha Bose', phone: '+91-555-0106' },
+    status: 'Safe',
+    lastSeen: '30 minutes ago',
+    location: { lat: 26.5822, lng: 93.3644 }, // Kaziranga
+    dateAdded: '2023-10-27T08:00:00Z',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026707d',
+  },
+  {
+    id: 't7',
+    name: 'Meera Krishnan',
+    passport: 'K13579246',
+    itinerary: 'Boating on Umiam Lake, Meghalaya.',
+    emergencyContact: { name: 'Suresh Krishnan', phone: '+91-555-0107' },
+    status: 'Safe',
+    lastSeen: '1 hour ago',
+    location: { lat: 25.673, lng: 91.905 }, // Umiam Lake
+    dateAdded: '2023-10-27T09:15:00Z',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026708e',
+  },
+  {
+    id: 't8',
+    name: 'Siddharth Patel',
+    passport: 'P65432109',
+    itinerary: 'Visiting the Kamakhya Temple in Guwahati, Assam.',
+    emergencyContact: { name: 'Pooja Patel', phone: '+91-555-0108' },
+    status: 'Safe',
+    lastSeen: '5 hours ago',
+    location: { lat: 26.1664, lng: 91.7056 },
+    dateAdded: '2023-10-22T11:00:00Z',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026709f',
+  },
+  {
+    id: 't9',
+    name: 'Aditi Sharma',
+    passport: 'S11223344',
+    itinerary: 'Exploring the serene town of Ziro, Arunachal Pradesh.',
+    emergencyContact: { name: 'Rajesh Sharma', phone: '+91-555-0109' },
+    status: 'Safe',
+    lastSeen: '2 days ago',
+    location: { lat: 27.6335, lng: 93.8324 },
+    dateAdded: '2023-10-21T18:00:00Z',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026710a',
+  },
+  {
+    id: 't10',
+    name: 'Karan Malhotra',
+    passport: 'M55667788',
+    itinerary: 'Visiting the Neermahal palace in Tripura.',
+    emergencyContact: { name: 'Anjali Malhotra', phone: '+91-555-0110' },
+    status: 'Safe',
+    lastSeen: '1 day ago',
+    location: { lat: 23.4939, lng: 91.3155 },
+    dateAdded: '2023-10-20T12:30:00Z',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026711b',
+  },
+   {
+    id: 't11',
+    name: 'Neha Desai',
+    passport: 'D99887766',
+    itinerary: 'Trekking to the Phawngpui Blue Mountain in Mizoram.',
+    emergencyContact: { name: 'Rahul Desai', phone: '+91-555-0111' },
+    status: 'Safe',
+    lastSeen: '6 hours ago',
+    location: { lat: 22.628, lng: 93.0485 },
+    dateAdded: '2023-10-28T06:00:00Z',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026712c'
+  },
+  {
+    id: 't12',
+    name: 'Raj Verma',
+    passport: 'V55443322',
+    itinerary: 'Exploring the ancient ruins of Unakoti, Tripura.',
+    emergencyContact: { name: 'Priya Verma', phone: '+91-555-0112' },
+    status: 'Safe',
+    lastSeen: '4 hours ago',
+    location: { lat: 24.0818, lng: 92.0163 },
+    dateAdded: '2023-10-28T09:30:00Z',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026713d'
   }
 ];
 
