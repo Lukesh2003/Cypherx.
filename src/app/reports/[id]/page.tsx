@@ -1,4 +1,6 @@
 
+'use client';
+
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -8,6 +10,7 @@ import {
   UserPlus,
   Users,
 } from 'lucide-react';
+import { useParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -27,14 +30,18 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Logo } from '@/components/icons';
-import { MOCK_ALERTS, MOCK_TOURISTS } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { useData } from '@/app/context/data-context';
 
-export default function ReportDetailsPage({ params }: { params: { id: string } }) {
-  const alert = MOCK_ALERTS.find(a => a.id === params.id);
-  const tourist = MOCK_TOURISTS.find(t => t.id === alert?.touristId);
+export default function ReportDetailsPage() {
+  const params = useParams();
+  const { id } = params;
+  const { alerts, tourists } = useData();
+
+  const alert = alerts.find(a => a.id === id);
+  const tourist = tourists.find(t => t.id === alert?.touristId);
 
   if (!alert || !tourist) {
     return (

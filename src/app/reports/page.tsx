@@ -1,4 +1,6 @@
 
+'use client';
+
 import Link from 'next/link';
 import {
   FileText,
@@ -34,10 +36,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { MOCK_ALERTS, MOCK_TOURISTS } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
+import { useData } from '@/app/context/data-context';
 
 export default function ReportsPage() {
+    const { alerts, tourists } = useData();
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
@@ -207,9 +211,9 @@ export default function ReportsPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {MOCK_ALERTS.map((alert) => (
+                  {alerts.map((alert) => (
                     <TableRow key={alert.id}>
-                      <TableCell>{MOCK_TOURISTS.find(t => t.id === alert.touristId)?.name}</TableCell>
+                      <TableCell>{tourists.find(t => t.id === alert.touristId)?.name}</TableCell>
                       <TableCell>{alert.description}</TableCell>
                       <TableCell>{alert.location}</TableCell>
                       <TableCell>
