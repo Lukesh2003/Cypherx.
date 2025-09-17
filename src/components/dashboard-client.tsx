@@ -12,8 +12,12 @@ import {
   MoreHorizontal,
   Siren,
   Users,
+  Map,
+  Thermometer
 } from "lucide-react";
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -51,6 +55,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { Switch } from "./ui/switch";
+import { Label } from "./ui/label";
 import { translateTexts } from "@/ai/flows/translate-alerts-and-ui";
 import { TooltipProvider } from "./ui/tooltip";
 import { useData } from "@/app/context/data-context";
@@ -90,6 +96,7 @@ function TranslationProvider({ children }: { children: React.ReactNode }) {
       keys.add("Real-Time Locations");
       keys.add("Recent Tourists");
       keys.add("Alerts & Incidents");
+      keys.add("High-Risk Zones")
       tourists.forEach(t => keys.add(t.status));
       alerts.forEach(a => keys.add(a.status));
       alerts.forEach(a => keys.add(a.type));
@@ -200,6 +207,7 @@ function DashboardContent() {
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const [isFirDialogOpen, setIsFirDialogOpen] = useState(false);
   const { language, setLanguage, getTranslation } = useTranslation();
+  const [showHeatmap, setShowHeatmap] = useState(true);
   const router = useRouter();
 
   const activeAlertsCount = alerts.filter((a) => a.status === "Active").length;
@@ -311,7 +319,7 @@ function DashboardContent() {
       x-chunk="dashboard-02-chunk-1"
     >
       <div className="flex flex-col items-center gap-1 text-center w-full p-6">
-        <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4 w-full">
+        <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-5 w-full">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -357,6 +365,20 @@ function DashboardContent() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
+                <TranslatedText>High-Risk Zones</TranslatedText>
+              </CardTitle>
+              <Thermometer className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+               <div className="flex items-center space-x-2">
+                <Switch id="heatmap-toggle" checked={showHeatmap} onCheckedChange={setShowHeatmap} />
+                <Label htmlFor="heatmap-toggle" className="text-xs text-muted-foreground">Show heatmap</Label>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
                 <TranslatedText>System Language</TranslatedText>
               </CardTitle>
               <Languages className="h-4 w-4 text-muted-foreground" />
@@ -388,7 +410,7 @@ function DashboardContent() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="h-[400px] w-full">
-                <LiveMap tourists={tourists} />
+                <LiveMap tourists={tourists} showHeatmap={showHeatmap} />
               </CardContent>
             </Card>
 
@@ -550,5 +572,3 @@ function DashboardContent() {
     </div>
   );
 }
-
-    

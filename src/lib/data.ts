@@ -90,3 +90,15 @@ export const MOCK_ALERTS: Alert[] = [
 ];
 
 
+export type HeatmapPoint = [number, number, number]; // [lat, lng, intensity]
+
+export const MOCK_HIGH_RISK_ZONES: HeatmapPoint[] = [
+    [26.9, 94.2, 0.8],
+    [26.92, 94.21, 0.7],
+    [25.3, 91.7, 0.9],
+    [25.28, 91.72, 1.0],
+    [27.3, 88.6, 0.6],
+    [27.34, 88.61, 0.5],
+    [26.1, 91.7, 0.9],
+    [26.14, 91.73, 1.0]
+];
