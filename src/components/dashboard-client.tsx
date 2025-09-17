@@ -389,6 +389,13 @@ function DashboardContent() {
                   <SelectItem value="ml">Malayalam</SelectItem>
                   <SelectItem value="te">Telugu</SelectItem>
                   <SelectItem value="kn">Kannada</SelectItem>
+                  <SelectItem value="bn">Bengali</SelectItem>
+                  <SelectItem value="mr">Marathi</SelectItem>
+                  <SelectItem value="pa">Punjabi</SelectItem>
+                  <SelectItem value="ks">Kashmiri</SelectItem>
+                  <SelectItem value="as">Assamese</SelectItem>
+                  <SelectItem value="brx">Bodo</SelectItem>
+                  <SelectItem value="mni">Manipuri</SelectItem>
                 </SelectContent>
               </Select>
             </CardContent>
